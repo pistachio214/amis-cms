@@ -242,17 +242,30 @@
                             body: {
                                 type: "nav",
                                 stacked: true,
+                                unfolded: false,
+                                expandPosition: 'after',
                                 links: [
                                     {
                                         label: "仪表板",
                                         icon: "fa fa-dashboard",
                                         to: "/dashboard",
-                                        active: true
+
                                     },
                                     {
                                         label: "用户管理",
                                         icon: "fa fa-users",
-                                        to: "/users"
+                                        children: [
+                                            {
+                                                label: "Nav 2-1",
+                                                to: "/docs/api-2-1-1",
+
+                                            },
+                                            {
+                                                label: "Nav 2-2",
+                                                to: "/docs/api-2-2",
+                                                active: true
+                                            }
+                                        ]
                                     },
                                     {
                                         label: "订单管理",
