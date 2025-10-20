@@ -20,14 +20,24 @@
       },
       {
         "label": "示例",
+        "isOpened": false,
         "children": [
           {
             "label": "页面A",
-            "redirect": "/cms/page-A-1",
+            "isOpened": false,
+            "key": "PageA",
+            "onEvent": {
+              "init": {
+                "actions": [
+                  {"actionType": "updateMenu", "args": {"menuKey": "PageA", "isOpened": false}}
+                ]
+              }
+            },
             "children": [
               {
                 "label": "页面A-1",
-                "url": "/cms/page-A-1",
+                "url": "1",
+                "key": "PageA-1",
                 "schema": {
                   "type": "page",
                   "title": "页面A-1",
@@ -36,7 +46,8 @@
               },
               {
                 "label": "页面A-2",
-                "url": "/cms/page-A-2",
+                "url": "2",
+                "key": "PageA-2",
                 "schema": {
                   "type": "page",
                   "title": "页面A-2",
@@ -45,7 +56,8 @@
               },
               {
                 "label": "页面A-3",
-                "url": "/cms/page-A-3",
+                "url": "3",
+                "key": "PageA-3",
                 "schema": {
                   "type": "page",
                   "title": "页面A-3",
@@ -75,6 +87,8 @@
           {
             "label": "列表示例",
             "icon": "fa fa-cube",
+            "url": "/crud",
+            "rewrite": "/crud/list",
             "children": [
               {
                 "label": "列表",
