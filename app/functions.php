@@ -13,7 +13,7 @@ if (!function_exists('plugin_asset')) {
 if (!function_exists('cms_asset')) {
     function cms_asset($path, $pluginName = 'cms'): string
     {
-        return "/app/{$pluginName}/assets/amis/{$path}";
+        return "/app/{$pluginName}/assets/{$path}";
     }
 }
 

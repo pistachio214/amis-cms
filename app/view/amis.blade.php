@@ -4,65 +4,20 @@
     <meta charset="UTF-8">
     <title>{{ $title ?? 'Amis 管理系统' }}</title>
     <!-- 引入 AMis SDK 核心样式 -->
-    <link rel="stylesheet" href="{{ cms_asset('cxd.css') }}"/>
+    <link rel="stylesheet" href="{{ cms_asset('amis/cxd.css') }}"/>
     <!-- 引入 辅助样式 -->
-    <link rel="stylesheet" href="{{ cms_asset('helper.css') }}"/>
+    <link rel="stylesheet" href="{{ cms_asset('amis/helper.css') }}"/>
     <!-- 引入 icon 样式 -->
-    <link rel="stylesheet" href="{{ cms_asset('icon/iconfont.css') }}"/>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
+    <link rel="stylesheet" href="{{ cms_asset('amis/icon/iconfont.css') }}"/>
 
-        .debug-info {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 10000;
-        }
-
-        /* 兼容所有主题的全屏样式 */
-        .full-screen-page [class*="Page-body"] {
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        .full-screen-page [class*="Page-main"] {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .full-screen-page [class*="Page-root"] {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .header-wrapper [class*="Container-body"] {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            justify-content: space-between;
-        }
-
-        .content-wrapper > [class*="Container-body"]:first-child {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-        }
-    </style>
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="{{ cms_asset('css/style.css') }}"/>
 </head>
 <body>
-<div id="amis-root" class="app-container" style="height:100vh;"></div>
+<div id="amis-root" class="app-container"></div>
 </body>
-<script src='{{ cms_asset('sdk.js') }}'></script>
-<script src='{{ cms_asset('rest.js') }}'></script>
+<script src='{{ cms_asset('amis/sdk.js') }}'></script>
+<script src='{{ cms_asset('amis/rest.js') }}'></script>
 <script>
     window.onload = function () {
         let amisJSON = {
@@ -114,6 +69,7 @@
                                     type: "dropdown-button",
                                     label: "张三 (管理员)",
                                     btnLevel: "link",
+                                    btnClassName: 'dropdown-wrapper',
                                     menuClassName: "white-bg",
                                     trigger: "hover",
                                     buttons: [
@@ -218,7 +174,8 @@
                                 flex: 1,
                                 padding: "0",
                                 overflowY: "auto",
-                                backgroundColor: "#fafafa",
+                                // backgroundColor: "#fafafa",
+                                backgroundColor: "#ffffff",
                                 height: '100%',
                             },
                             body: {
@@ -244,7 +201,7 @@
                     body: [
                         {
                             type: "tpl",
-                            tpl: "<div><p>© 2023 企业管理系统 版权所有 | 技术支持: 400-123-4567</p></div>"
+                            tpl: "<div><p>© 2025 企业管理系统 版权所有 | 技术支持: xxx-xxx-xxxx</p></div>"
                         }
                     ]
                 }
