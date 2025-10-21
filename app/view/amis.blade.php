@@ -59,89 +59,12 @@
     </style>
 </head>
 <body>
-<div id="debugInfo" class="debug-info">Loading...</div>
 <div id="amis-root" class="app-container" style="height:100vh;"></div>
 </body>
 <script src='{{ cms_asset('sdk.js') }}'></script>
 <script src='{{ cms_asset('rest.js') }}'></script>
 <script>
     window.onload = function () {
-        const amis = amisRequire('amis/embed');
-
-        // 先测试 API 数据
-        fetch('/app/cms/site.json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('debugInfo').innerHTML =
-                    `API loaded: ${data.data.pages.length} pages<br>
-                     First page: ${data.data.pages[0].label}`;
-                console.log('Site data:', data);
-            })
-            .catch(error => {
-                document.getElementById('debugInfo').innerHTML = 'API load failed';
-                console.error('API error:', error);
-            });
-
-        // const amisJSON = {
-        //     type: 'app',
-        //     brandName: 'Admin',
-        //     logo: '/favicon.ico',
-        //     header: {
-        //         type: 'tpl',
-        //         inline: false,
-        //         className: 'w-full',
-        //         tpl: '<div class="flex justify-between"><div>顶部区域左侧</div><div>顶部区域右侧</div></div>'
-        //     },
-        //     footer: '<div class="p-2 text-center bg-light">© 2024 公司名称 版权所有</div>',
-        //     // asideFixed: true,
-        //     // asideSticky: true,
-        //     // collapsed: true,  // 侧边栏默认收起
-        //     // persistState: true,        // 持久化状态
-        //     // persistData: "localStorage", // 使用 localStorage 持久化
-        //     // saveOrder: true,           // 保存顺序
-        //     saveFoldable: true,  // 允许保存折叠状态
-        //     folded: true,        // 初始折叠状态
-        //     sidebar: {
-        //         defaultCollapsed: true,  // 设置侧边栏默认折叠
-        //         collapsed: true,
-        //     },
-        //     layout: {
-        //         asideCollapsed: true
-        //     },
-        //     menu: {
-        //         type: 'menu',
-        //         children: [
-        //             {
-        //                 label: "一级菜单",
-        //                 key: "topMenu",
-        //                 isOpened: false, // 强制默认收起
-        //                 actionType: "expand", // 关键：点击时触发展开而非跳转
-        //                 onEvent: {
-        //                     click: {
-        //                         actions: [
-        //                             {
-        //                                 actionType: "toggle", // 切换展开/收起状态
-        //                                 componentId: "topMenu",
-        //                                 args: {
-        //                                     isOpened: true
-        //                                 } // 点击时展开
-        //                             }
-        //                         ]
-        //                     }
-        //                 },
-        //                 children: [
-        //                     {label: "二级菜单1", key: "subMenu1"},
-        //                     {label: "二级菜单2", key: "subMenu2"}
-        //                 ]
-        //             }
-        //         ]
-        //     },
-        //     body: {
-        //         label: '111111',
-        //         body: '222222'
-        //     }
-        // };
-
         let amisJSON = {
             type: "page",
             cssVars: {
@@ -234,7 +157,7 @@
                             type: "container",
                             style: {
                                 width: "var(--sidebar-width)",
-                                backgroundColor: "var(--sidebar-bg)",
+                                // backgroundColor: "var(--sidebar-bg)",
                                 borderRight: "1px solid #e6e6e6",
                                 overflowY: "auto",
                                 height: '100%',
@@ -249,7 +172,7 @@
                                         label: "仪表板",
                                         icon: "fa fa-dashboard",
                                         to: "/dashboard",
-
+                                        active: true
                                     },
                                     {
                                         label: "用户管理",
@@ -263,7 +186,6 @@
                                             {
                                                 label: "Nav 2-2",
                                                 to: "/docs/api-2-2",
-                                                active: true
                                             }
                                         ]
                                     },
@@ -314,7 +236,6 @@
                     style: {
                         backgroundColor: "#f0f2f5",
                         height: '50px',
-                        // padding: "16px",
                         borderTop: "1px solid #e6e6e6",
                         textAlign: "center",
                         color: "#666",
@@ -330,6 +251,7 @@
             ]
         }
 
+        const amis = amisRequire('amis/embed');
         amis.embed('#amis-root', amisJSON);
     }
 </script>
