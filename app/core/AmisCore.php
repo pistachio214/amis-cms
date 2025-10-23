@@ -9,8 +9,6 @@ use support\Response;
  */
 class AmisCore
 {
-    // logo
-    private string $logo = '/favicon.ico';
 
     // 页面标题
     private string $pageTitle = 'Amis 管理系统';
@@ -18,11 +16,12 @@ class AmisCore
     // 页面详情
     private string $description = 'Amis Description';
 
+    // logo
+    private string $logo = '/favicon.ico';
+
     private string $title = '企业管理系统';
 
-    private array $header = [];
-
-    private string $username = '----';
+    private string $username = 'Amis Username';
 
     // 管理员部分
     private array $userDropdown = [];
@@ -30,23 +29,45 @@ class AmisCore
     // 菜单数据
     private array $menuNav = [];
 
-    // 实体数据
-    private array $body;
-
-    private array $page;
-
     // 底部版权说明
-    private array $footer = [];
+    private ?string $footer = null;
 
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        return $this;
-    }
+    // 实体数据
+    private array $body = [
+        "type" => "page",
+        "body" => [
+            "type" => "tpl",
+            "tpl" => "<div style='text-align:center;padding:50px;'><h2>欢迎使用企业管理系统</h2><p>请从左侧菜单选择功能模块</p></div>"
+        ]
+    ];
 
-    public function setMenuNav(array $menuNav): self
+    private array $defaultUserDropdown = [
+        [
+            'label' => '个人中心',
+            'actionType' => 'link',
+            'link' => '/profile'
+        ],
+        [
+            'label' => '系统设置',
+            'actionType' => 'link',
+            'link' => '/settings'
+        ],
+        [
+            'type' => 'divider'
+        ],
+        [
+            'label' => '退出登录',
+            'actionType' => 'ajax',
+            'api' => '/api/logout',
+            'confirmText' => '确定要退出登录吗？'
+        ],
+    ];
+
+    private string $defaultFooter = '© 2025 企业管理系统 版权所有 | 技术支持: xxx-xxx-xxxx';
+
+    public function __construct()
     {
-        $nav = [
+        $this->menuNav = [
             [
                 "label" => "仪表板",
                 "icon" => "fa fa-dashboard",
@@ -88,49 +109,18 @@ class AmisCore
                 "to" => "/settings"
             ]
         ];
+    }
 
-        $this->menuNav = [
-            'type' => 'container',
-            'style' => [
-                'width' => 'var(--sidebar-width)',
-                'borderRight' => '1px solid #e6e6e6',
-                'overflowY' => 'auto',
-                'height' => '100%',
-            ],
-            'body' => [
-                'type' => 'nav',
-                'stacked' => true,
-                'unfolded' => false,
-                'expandPosition' => 'after',
-                'links' => $nav
-            ]
-        ];
-
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
         return $this;
     }
 
-    public function setFooter(string $footer = null): self
+
+    public function setDescription(string $description): self
     {
-        if (empty($footer)) {
-            $footer = '© 2025 企业管理系统 版权所有 | 技术支持: xxx-xxx-xxxx';
-        }
-
-        $this->footer = [
-            'type' => 'container',
-            'style' => [
-                'backgroundColor' => '#f0f2f5',
-                'height' => '50px',
-                'borderTop' => '1px solid #e6e6e6',
-                'textAlign' => 'center',
-                'color' => '#666',
-                'fontSize' => '#14px',
-            ],
-            'body' => [
-                'type' => 'tpl',
-                'tpl' => "<div><p>{$footer}</p></div>"
-            ]
-        ];
-
+        $this->description = $description;
         return $this;
     }
 
@@ -140,133 +130,39 @@ class AmisCore
         return $this;
     }
 
-    public function setUserDropdown(array $userDropdown = []): self
+    public function setUserDropdown(array $userDropdown): self
     {
-        $dropdown = [
-            [
-                'label' => '个人中心',
-                'actionType' => 'link',
-                'link' => '/profile'
-            ],
-            [
-                'label' => '系统设置',
-                'actionType' => 'link',
-                'link' => '/settings'
-            ],
-            [
-                'type' => '/divider'
-            ],
-            [
-                'label' => '退出登录',
-                'actionType' => 'ajax',
-                'api' => '/api/logout',
-                'confirmText' => '确定要退出登录吗？'
-            ],
+        $this->userDropdown = $userDropdown;
+        return $this;
+    }
 
-        ];
+    public function setFooter(?string $footer): self
+    {
+        $this->footer = $footer;
+        return $this;
+    }
 
-        if (!empty($dropdown)) {
-            $dropdown = array_merge($userDropdown, [['type' => '/divider']], $dropdown);
+    private function getCore(): self
+    {
+        if ($this->userDropdown) {
+            // 当前为一维数组组成的下拉菜单,需要包装成二维数组进行合并
+            if (count($this->userDropdown) == count($this->userDropdown, 1)) {
+                $this->userDropdown = [$this->userDropdown];
+            }
+
+            $this->userDropdown = array_merge($this->userDropdown, [['type' => 'divider']], $this->defaultUserDropdown);
+        } else {
+            $this->userDropdown = $this->defaultUserDropdown;
         }
 
-        $this->userDropdown = [
-            'type' => 'flex',
-            'className' => 'header-right',
-            'items' => [
-                [
-                    'type' => 'dropdown-button',
-                    'label' => $this->username,
-                    'btnLevel' => 'link',
-                    'btnClassName' => 'dropdown-wrapper',
-                    'menuClassName' => 'white-bg',
-                    'trigger' => 'hover',
-                    'buttons' => $dropdown
-                ]
-            ]
-        ];
+        if (!$this->footer) {
+            $this->footer = $this->defaultFooter;
+        }
 
         return $this;
     }
 
-    private function setHeader(): self
-    {
-        $this->header = [
-            [
-                'type' => 'flex',
-                'className' => 'header-left',
-                'items' => [
-                    [
-                        'type' => 'tpl',
-                        'tpl' => "<div style='display:flex;align-items:center;gap:12px;'><img src='{$this->logo}' style='height:32px;' /><span style='font-size:18px;font-weight:bold;'>{$this->title}</span></div>",
-                    ]
-                ]
-            ],
-
-            // 管理员下拉操作
-            $this->userDropdown
-        ];
-
-        return $this;
-    }
-
-    private function setPage(): self
-    {
-        $this->page = [
-            [
-                "type" => "container",
-                "style" => [
-                    "backgroundColor" => "var(--header-bg)",
-                    "color" => "var(--header-color)",
-                    "padding" => "0 24px",
-                    "height" => "64px",
-                    "display" => "flex",
-                    "flexDirection" => "row",
-                    "alignItems" => "center",
-                    "justifyContent" => "space-between",
-                    "boxShadow" => "0 2px 8px rgba(0,0,0,0.1)"
-                ],
-                "className" => "header-wrapper",
-                "body" => $this->header
-            ],
-            [
-                "type" => "container",
-                "style" => [
-                    "flex" => 1,
-                    "display" => "flex",
-                    "flexDirection" => "row",
-                    "overflow" => "hidden",
-                    "height" => "calc(100vh - 114px)"
-                ],
-                "className" => "content-wrapper",
-                "body" => [
-                    $this->menuNav,
-                    [
-                        "type" => "container",
-                        "style" => [
-                            "flex" => 1,
-                            "padding" => "0",
-                            "overflowY" => "auto",
-                            "backgroundColor" => "#ffffff",
-                            "height" => "100%"
-                        ],
-                        "body" => [
-                            "type" => "page",
-                            "body" => [
-                                "type" => "tpl",
-                                "tpl" => "<div style='text-align:center;padding:50px;'><h2>欢迎使用企业管理系统</h2><p>请从左侧菜单选择功能模块</p></div>"
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            $this->footer
-        ];
-
-        return $this;
-    }
-
-
-    public function getCore(): array
+    private function formAmisSchema(): array
     {
         return [
             "type" => "page",
@@ -283,16 +179,115 @@ class AmisCore
                 "display" => "flex",
                 "flexDirection" => "column"
             ],
-            "body" => $this->page
+            "body" => [
+                [
+                    "type" => "container",
+                    "style" => [
+                        "backgroundColor" => "var(--header-bg)",
+                        "color" => "var(--header-color)",
+                        "padding" => "0 24px",
+                        "height" => "64px",
+                        "display" => "flex",
+                        "flexDirection" => "row",
+                        "alignItems" => "center",
+                        "justifyContent" => "space-between",
+                        "boxShadow" => "0 2px 8px rgba(0,0,0,0.1)"
+                    ],
+                    "className" => "header-wrapper",
+                    "body" => [
+                        [
+                            'type' => 'flex',
+                            'className' => 'header-left',
+                            'items' => [
+                                [
+                                    'type' => 'tpl',
+                                    'tpl' => "<div style='display:flex;align-items:center;gap:12px;'><img src='{$this->logo}' style='height:32px;' /><span style='font-size:18px;font-weight:bold;'>{$this->title}</span></div>",
+                                ]
+                            ]
+                        ],
+
+                        // 管理员下拉操作
+                        [
+                            'type' => 'flex',
+                            'className' => 'header-right',
+                            'items' => [
+                                [
+                                    'type' => 'dropdown-button',
+                                    'label' => $this->username,
+                                    'btnLevel' => 'link',
+                                    'btnClassName' => 'dropdown-wrapper',
+                                    'menuClassName' => 'white-bg',
+                                    'trigger' => 'hover',
+                                    'buttons' => $this->userDropdown
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "type" => "container",
+                    "style" => [
+                        "flex" => 1,
+                        "display" => "flex",
+                        "flexDirection" => "row",
+                        "overflow" => "hidden",
+                        "height" => "calc(100vh - 114px)"
+                    ],
+                    "className" => "content-wrapper",
+                    "body" => [
+                        [
+                            'type' => 'container',
+                            'style' => [
+                                'width' => 'var(--sidebar-width)',
+                                'borderRight' => '1px solid #e6e6e6',
+                                'overflowY' => 'auto',
+                                'height' => '100%',
+                            ],
+                            'body' => [
+                                'type' => 'nav',
+                                'stacked' => true,
+                                'unfolded' => false,
+                                'expandPosition' => 'after',
+                                'links' => $this->menuNav
+                            ]
+                        ],
+                        [
+                            "type" => "container",
+                            "style" => [
+                                "flex" => 1,
+                                "padding" => "0",
+                                "overflowY" => "auto",
+                                "backgroundColor" => "#ffffff",
+                                "height" => "100%"
+                            ],
+                            "body" => $this->body
+                        ]
+                    ]
+                ],
+                [
+                    'type' => 'container',
+                    'style' => [
+                        'backgroundColor' => '#f0f2f5',
+                        'height' => '50px',
+                        'borderTop' => '1px solid #e6e6e6',
+                        'textAlign' => 'center',
+                        'color' => '#666',
+                        'fontSize' => '#14px',
+                    ],
+                    'body' => [
+                        'type' => 'tpl',
+                        'tpl' => "<div><p>{$this->footer}</p></div>"
+                    ]
+                ]
+            ]
         ];
     }
 
     public function build(): Response
     {
-        dump($this->setPage()->setUserDropdown()->getCore());
         return view('amis', [
             'title' => $this->pageTitle, 'description' => $this->description,
-            'schema' => json_encode($this->setPage()->setHeader()->setUserDropdown()->getCore())
+            'schema' => json_encode($this->getCore()->formAmisSchema())
         ]);
     }
 
