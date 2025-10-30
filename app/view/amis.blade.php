@@ -21,11 +21,8 @@
 <script src='{{ cms_asset('amis/rest.js') }}'></script>
 <script>
     window.onload = function () {
-
-        const amisJSON = {!! $schema !!};
-
-        const amis = amisRequire('amis/embed');
-        amis.embed('#amis-root', amisJSON, {}, {});
+        const schema = {!! $schema !!};
+        amisRequire('amis/embed').embed('#amis-root', schema, {}, {});
     }
 </script>
 </html>

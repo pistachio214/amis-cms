@@ -21,9 +21,7 @@
         const schema = {!! $schema !!};
 
         // 渲染 AMis 页面
-        amisRequire('amis/embed').embed('#amis-root', schema, {}, {
-            theme: 'cxd'
-        });
+        amisRequire('amis/embed').embed('#amis-root', schema, {}, {});
     })();
 </script>
 </html>
