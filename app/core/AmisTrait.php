@@ -138,7 +138,7 @@ trait AmisTrait
             [
                 "label" => "仪表板",
                 "icon" => "fa fa-dashboard",
-                "to" => "/dashboard",
+                "to" => "/cms/index",
                 "active" => true
             ],
             [

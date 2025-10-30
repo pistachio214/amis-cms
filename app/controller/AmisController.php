@@ -12,7 +12,7 @@ class AmisController
 
     public function index(Request $request): Response
     {
-        return $this->setTitle('标题标题标题标题')->view('page');
+        return $this->setTitle('仪表盘')->view('home');
     }
 
 }

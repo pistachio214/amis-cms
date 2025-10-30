@@ -1,0 +1,10 @@
+{
+  "type": "page",
+  "data": {
+    "lang": "javascript"
+  },
+  "body": {
+    "type": "tpl",
+    "tpl": "<div style='text-align:center;padding:50px;'><h2>欢迎使用企业管理系统</h2><p>请从左侧菜单选择功能模块 lang=${lang}</p></div>"
+  }
+}

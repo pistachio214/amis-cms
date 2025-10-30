@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $title ?? 'Amis 管理系统' }}</title>
+    <title>{{ $title ?? 'Amis'}} | {{ \plugin\cms\app\core\Config::APP_NAME }}</title>
 
     <!-- 引入 AMis SDK 核心样式 -->
     <link rel="stylesheet" href="{{ cms_asset('amis/cxd.css') }}"/>
