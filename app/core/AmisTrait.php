@@ -15,19 +15,19 @@ use support\Response;
  */
 trait AmisTrait
 {
-    private string $title;
+    private string $title = Config::APP_NAME;
 
     private string $description = '';
 
     private array $replacements = [];
 
-    private string $logo = '/favicon.ico';
+    private string $logo = Config::APP_LOGO;
 
-    private string $system = '企业管理系统';
+    private string $system = Config::APP_NAME;
 
     private array $userDropdown = [];
 
-    private string $footer = '© 2025 企业管理系统 版权所有 | 技术支持: 111-222-3333';
+    private string $footer = Config::APP_FOOTER;
 
     public function setTitle(string $title): self
     {
