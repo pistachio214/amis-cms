@@ -5,6 +5,8 @@ use Webman\Route;
 Route::disableDefaultRoute('cms');
 
 Route::group('/cms', function () {
+    Route::get('/login', [\plugin\cms\app\controller\AuthController::class, 'login']);
+
     // 在 config/route.php 中
     Route::any('/{path:.+}', [\plugin\cms\app\controller\AmisController::class, 'index']);
     // AMis 页面
