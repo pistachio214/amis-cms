@@ -35,7 +35,7 @@ body {
     border-color: #001529 !important;
     background-color: #001529 !important;
     color: #fff !important;
-    margin-right: 50px !important;
+    margin-right: 2px !important;
 }
 
 .content-wrapper > [class*="Container-body"]:first-child {

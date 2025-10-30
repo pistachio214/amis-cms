@@ -21,6 +21,60 @@
 <script src='{{ cms_asset('amis/rest.js') }}'></script>
 <script>
     window.onload = function () {
+        const amisEnv = {
+            // 全局请求适配器
+            requestAdaptor: (api) => {
+                // 获取 token
+                const token = localStorage.getItem('auth_token');
+
+                if (token) {
+                    // 添加 Authorization header
+                    if (!api.headers) {
+                        api.headers = {};
+                    }
+                    api.headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                // 添加其他公共配置
+                api.headers = {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    ...api.headers
+                };
+
+                return api;
+            },
+
+            // 全局响应适配器
+            responseAdaptor: (api, response) => {
+                console.log('API配置:', api);
+                console.log('原始响应:', response);
+                // 统一处理认证失败
+                if (response.code === 401) {
+                    localStorage.removeItem('auth_token');
+                    window.location.href = '/cms/login';
+                    return {
+                        status: 401,
+                        msg: '认证失败，请重新登录'
+                    };
+                }
+
+                // 适配常见的后端响应格式
+                if (response && typeof response.code !== 'undefined') {
+                    return {
+                        code: response.code,
+                        status: response.code === 200 ? 0 : response.code,
+                        defaultMsg: 'loading....',
+                        msg: response.message,
+                        msgTimeout: 1500,
+                        data: response.data || {}
+                    };
+                }
+
+                return response;
+            },
+        };
+
         const schema = {
             "type": "page",
             "title": "欢迎登录AMis Admin",
@@ -60,18 +114,13 @@
                                 "password": "${password}",
                                 "remember": "${remember}"
                             },
-                            "adaptor": "console.log(payload); if (payload.code === 200) { return { ...payload, status: 0, data: { name: '张三' } }; } else { return { ...payload, status: payload.code};}",
-                            "messages": {
-                                "saveSuccess": "✅ ${message},正在跳转...",
-                                "saveFailed": "❌ ${message}"
-                            }
                         },
                         "onEvent": {
                             "submitSucc": {
                                 "actions": [
                                     {
                                         "actionType": "custom",
-                                        "script": "console.log('完整事件对象:', event.data); const apiResult = event.data?.result || event.data?.responseData || event.data; console.log('API结果:', apiResult); if (apiResult && apiResult.status === 0) { const redirectUrl = '/cms/index'; setTimeout(() => { location.href = redirectUrl; }, 1500); }"
+                                        "script": "const apiResult = event.data?.result || event.data?.responseData || event.data; console.log('API结果:', apiResult); if (apiResult && apiResult.status === 0) { localStorage.setItem('auth_token', apiResult.data.token); setTimeout(() => { location.href = '/cms/index'; }, 1000); }"
                                     }
                                 ]
                             }
@@ -142,7 +191,7 @@
         };
 
         // 渲染 AMis 页面
-        amisRequire('amis/embed').embed('#amis-root', schema, {}, {});
+        amisRequire('amis/embed').embed('#amis-root', schema, {}, amisEnv);
     };
 </script>
 </html>
